@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "define_columns"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Customizable content columns for Rails}
+    gem.description = %Q{define_columns allows you to add, hide, customize the output of your columns}
     gem.email = "zan@liangzan.net"
     gem.homepage = "http://github.com/liangzan/define_columns"
     gem.authors = ["Wong Liang Zan"]

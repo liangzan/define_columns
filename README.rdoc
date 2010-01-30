@@ -1,17 +1,67 @@
 = define_columns
 
-Description goes here.
+Define Columns allows you to manipulate the content columns of your ActiveRecord model. 
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+== Features
 
+* Add virtual attributes as columns
+* Hiding existing content columns
+* Changes the output of the column
+
+== Benefits 
+
+* Allows you to place your logic in the model instead of the view.
+* Does not assume your table markup. You have full flexibility to change things
+* No need to hand write the table columns for virtual attributes
+
+== Installation
+
+   $ gem install define_columns
+
+== Usage
+
+   # Person has content_columns [ "name", "address", "gender", "hobbies" ]
+   # Note that the names must be an exact match
+   class Person < ActiveRecord::Base
+     define_columns do |columns|
+       columns.hide %w(name)			# takes in an array of column names
+       columns.add %w(favourite_color) 		# can add virtual attributes as columns
+       columns.show(:gender) do |gender|	# returns "-Male-" for column.show(person)
+         "-#{gender}-"       			     
+       end
+     end  
+
+     def favourite_color
+       red
+     end  
+   end
+
+   # Person.table_columns returns [ "address", "gender", "hobbies", "favourite_color" ]
+
+   # In your view(in haml)
+    %table
+      %thead
+        %tr
+          - Person.table_columns.each do |column|
+            %th= column.header
+
+      - @persons.each do |person|
+        %tbody
+	  - Person.table_columns.each do |column|  
+            %td= column.show(person)
+
+== To Note
+
+The show block takes in an argument and a block. 
+
+  columns.show(:gender) do |gender|	
+    "-#{gender}-"       			     
+  end
+  
+The argument :gender must match the column name. The block parameter 'gender' is equivalent to the result of @person.gender. 
+
+Not having a show block renders @person.gender
+                
 == Copyright
 
 Copyright (c) 2010 Wong Liang Zan. See LICENSE for details.
